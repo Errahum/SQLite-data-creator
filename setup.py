@@ -3,11 +3,11 @@ from setuptools import setup, find_packages
 setup(
     name='SQLiteDataCreator',
     version='1.0.0',
-    author='sahurows',
+    author='sariteos',
     description='',
     long_description=open('README.md').read(),  # Assurez-vous d'avoir un fichier README.md
     long_description_content_type='text/markdown',
-    url='https://github.com/Sahurows/SQLite-data-creator',
+    url='https://github.com/sariteos/SQLite-data-creator',
     packages=find_packages(),
     install_requires=[
         'tkinter',
