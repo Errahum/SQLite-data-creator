@@ -15,18 +15,24 @@ def select_file(app):
 
 
 def open_create_db(app):
-    db_file = app.db_entry.get()
-    if db_file.strip() and not db_file.endswith('.db'):
+    db_file = app.db_entry.get().strip()
+    
+    if not db_file:
+        # Open file save dialog if entry is empty
+        db_file = filedialog.asksaveasfilename(defaultextension=".db", filetypes=[("SQLite files", "*.db")])
+        
+    if db_file and not db_file.endswith('.db'):
         db_file += '.db'
+    
+    if db_file:
         db_file = os.path.join(app.output_dir, db_file)
-
-        if db_file:
-            app.conn = create_connection(db_file)
-            if app.conn:
-                messagebox.showinfo("Information", f"Connected to database: {db_file}")
-                update_table_list(app)
-            else:
-                messagebox.showerror("Error", "Failed to connect to database.")
+        app.conn = create_connection(db_file)
+        
+        if app.conn:
+            messagebox.showinfo("Information", f"Connected to database: {db_file}")
+            update_table_list(app)
+        else:
+            messagebox.showerror("Error", "Failed to connect to database.")
     else:
         messagebox.showerror("Error", "Invalid database file name.")
 
@@ -83,7 +89,7 @@ def display_table_content(app, event):
         if selection:
             table_name = event.widget.get(selection[0])
             cursor = app.conn.cursor()
-            cursor.execute(f"SELECT * FROM {table_name}")
+            cursor.execute(f"SELECT * FROM \"{table_name}\"")
             rows = cursor.fetchall()
             columns = [description[0] for description in cursor.description]
             app.data_text.delete(1.0, tk.END)
